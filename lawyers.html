@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YourSide Legal Directory</title>
+    <style>
+      :root {
+        --primary-color: #04807e;
+        --secondary-color: #036b69;
+        --accent-color: #e74c3c;
+        --light-gray: #f5f5f5;
+        --dark-gray: #333;
+        --text-color: #2c3e50;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--light-gray);
+        color: var(--text-color);
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      header {
+        background-color: white;
+        padding: 15px 20px;
+        box-shadow: var(--shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo img {
+        height: 50px;
+      }
+
+      .logo h1 {
+        color: var(--primary-color);
+        font-size: 1.5rem;
+      }
+
+      .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 20px;
+        cursor: pointer;
+        z-index: 200;
+      }
+
+      .hamburger span {
+        width: 100%;
+        height: 3px;
+        background-color: var(--primary-color);
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger.active span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100vh;
+        background-color: white;
+        box-shadow: var(--shadow);
+        transition: right 0.3s ease;
+        z-index: 150;
+        padding: 80px 20px 20px;
+      }
+
+      .sidebar.active {
+        right: 0;
+      }
+
+      .sidebar-menu {
+        list-style: none;
+      }
+
+      .sidebar-menu li {
+        margin-bottom: 15px;
+      }
+
+      .sidebar-menu a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 1.1rem;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: all 0.2s ease;
+      }
+
+      .sidebar-menu a:hover {
+        background-color: var(--light-gray);
+        color: var(--secondary-color);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .filter-group {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .filter-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+
+      .filter-group select,
+      .filter-group input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .lawyer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .lawyer-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .lawyer-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .lawyer-photo {
+        height: 200px;
+        background-color: var(--light-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .lawyer-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .lawyer-info {
+        padding: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .lawyer-name {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+        color: var(--primary-color);
+      }
+
+      .firm-name {
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .practice-areas {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        color: var(--dark-gray);
+        flex-grow: 1;
+      }
+
+      .statement {
+        font-style: italic;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 15px;
+        border-left: 3px solid var(--secondary-color);
+        padding-left: 10px;
+      }
+
+      .contact-info {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .contact-detail {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+
+      .contact-icons {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0px;
+      }
+
+      .contact-icons img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .lawyer-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+      }
+
+      .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+
+      .btn-primary {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #2980b9;
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--secondary-color);
+        color: var(--secondary-color);
+      }
+
+      .btn-outline:hover {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        gap: 5px;
+      }
+
+      .page-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: white;
+        color: var(--text-color);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .page-btn:hover,
+      .page-btn.active {
+        background-color: var(--secondary-color);
+        color: white;
+        border-color: var(--secondary-color);
+      }
+
+      .page-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 120;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      @media (max-width: 768px) {
+        .lawyer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-group {
+          min-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          <img src="./assets/YourSide_logo.png" alt="YourSide Logo" />
+        </div>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </header>
+    </div>
+
+    <div class="sidebar">
+      <ul class="sidebar-menu">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Find a Lawyer</a></li>
+        <li><a href="#">Practice Areas</a></li>
+        <li><a href="#">Regions</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="container">
+      <div class="filters">
+        <div class="filter-group">
+          <label for="region">Region</label>
+          <select id="region">
+            <option value="">All Regions</option>
+            <option value="Piedmont">Piedmont</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="city">City</label>
+          <select id="city">
+            <option value="">All Cities</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="practice">Practice Area</label>
+          <input
+            type="text"
+            id="practice"
+            placeholder="e.g. Divorce, Child Custody"
+          />
+        </div>
+        <div class="filter-group">
+          <label for="search">Search</label>
+          <input
+            type="text"
+            id="search"
+            placeholder="Search by name or keyword"
+          />
+        </div>
+      </div>
+
+      <div class="lawyer-grid" id="lawyerGrid"></div>
+
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+    <script src="./index.js"></script>
+  </body>
+</html>
